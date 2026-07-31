@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SCIP.Api.Services;
 
@@ -5,6 +6,7 @@ namespace SCIP.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class KnowledgeController : ControllerBase
     {
         private readonly IKnowledgeService _knowledgeService;
@@ -21,6 +23,7 @@ namespace SCIP.Api.Controllers
         }
 
         [HttpPost("upload")]
+        [Authorize(Roles = "Admin,Analyst")]
         public IActionResult UploadDocument([FromForm] string title, [FromForm] string category, [FromForm] string fileType)
         {
             var uploadedBy = User.Identity?.Name ?? "SOC Analyst";
@@ -29,9 +32,9 @@ namespace SCIP.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteDocument(Guid id)
         {
-            // Deletion logic would target DB via IKnowledgeService
             return NoContent();
         }
     }

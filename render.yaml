@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: scip-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: JwtSettings__Secret
+        sync: false
+      - key: JwtSettings__Issuer
+        value: SCIP-Identity-Server
+      - key: JwtSettings__Audience
+        value: SCIP-Web-Clients
+      - key: JwtSettings__ExpiryMinutes
+        value: "120"
+      - key: GeminiSettings__ApiKey
+        sync: false
+      - key: GeminiSettings__Model
+        value: gemini-1.5-flash

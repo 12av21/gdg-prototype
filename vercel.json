@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "name": "scip-web",
+  "buildCommand": "npm --prefix apps/web install && npm --prefix apps/web run build",
+  "outputDirectory": "apps/web/dist",
+  "framework": null,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://scip-api.onrender.com/api/$1",
+      "headers": { "X-Requested-With": "XMLHttpRequest" }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_BASE_URL": "https://scip-api.onrender.com/api"
+  }
+}

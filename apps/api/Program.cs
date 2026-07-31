@@ -117,4 +117,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+// Auto-seed initial database records
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ScipDbContext>();
+        context.Database.EnsureCreated();
+        DbSeeder.Seed(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning("Database initialization skipped or offline: {Message}", ex.Message);
+    }
+}
+
 app.Run();

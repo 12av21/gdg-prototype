@@ -7,6 +7,7 @@ namespace SCIP.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class IncidentsController : ControllerBase
     {
         private readonly IIncidentService _incidentService;
@@ -19,31 +20,31 @@ namespace SCIP.Api.Controllers
         [HttpGet]
         public IActionResult GetIncidents()
         {
-            var incidents = _incidentService.GetAllIncidents();
-            return Ok(incidents);
+            return Ok(_incidentService.GetAllIncidents());
         }
 
         [HttpGet("{id}")]
         public IActionResult GetIncidentById(Guid id)
         {
             var incident = _incidentService.GetIncidentById(id);
-            if (incident == null) return NotFound();
+            if (incident == null) return NotFound(new { message = "Incident not found." });
             return Ok(incident);
         }
 
         [HttpPost]
         public IActionResult CreateIncident([FromBody] CreateIncidentDto dto)
         {
-            var user = User.Identity?.Name ?? "Security Analyst";
-            var created = _incidentService.CreateIncident(dto, user);
+            var reportedBy = User.Identity?.Name ?? "Unknown User";
+            var created = _incidentService.CreateIncident(dto, reportedBy);
             return CreatedAtAction(nameof(GetIncidentById), new { id = created.Id }, created);
         }
 
         [HttpPatch("{id}/status")]
+        [Authorize(Roles = "Admin,Analyst")]
         public IActionResult UpdateStatus(Guid id, [FromBody] UpdateIncidentStatusDto dto)
         {
             var updated = _incidentService.UpdateStatus(id, dto);
-            if (updated == null) return NotFound();
+            if (updated == null) return NotFound(new { message = "Incident not found." });
             return Ok(updated);
         }
     }

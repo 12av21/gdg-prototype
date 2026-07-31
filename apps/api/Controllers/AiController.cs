@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SCIP.Api.DTOs;
 using SCIP.Api.Services;
@@ -6,6 +7,7 @@ namespace SCIP.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AiController : ControllerBase
     {
         private readonly IAiService _aiService;
