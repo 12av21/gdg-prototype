@@ -1,36 +1,34 @@
 import React, { useState } from 'react';
-import { ShieldAlert, Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
-import { User, Role } from '../../types';
+import { ShieldAlert, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Role } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 
-interface LoginPageProps {
-  onLoginSuccess: (user: User) => void;
-}
-
-export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
+export const LoginPage: React.FC = () => {
+  const { login, isLoading, error } = useAuth();
   const [email, setEmail] = useState('analyst@scip.sec');
   const [password, setPassword] = useState('password');
   const [role, setRole] = useState<Role>('Analyst');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleRoleSwitch = (r: Role) => {
+    setRole(r);
+    setEmail(`${r.toLowerCase()}@scip.sec`);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLoginSuccess({
-      id: 'u-101',
-      name: role === 'Admin' ? 'Sarah Connor (Admin)' : role === 'Analyst' ? 'Alex Mercer (SOC Lead)' : 'John Doe (Employee)',
-      email,
-      role,
-      department: 'Cyber Defense Center',
-      createdAt: new Date().toISOString()
-    });
+    try {
+      await login({ email, password });
+    } catch {
+      // error is surfaced via useAuth().error
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] relative overflow-hidden p-4">
-      {/* Background Decorative Gradients */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md glass-card rounded-2xl p-8 border border-slate-800 shadow-2xl relative z-10">
-        {/* Logo & Header */}
         <div className="text-center mb-8">
           <div className="inline-flex p-3.5 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 shadow-lg shadow-brand-500/25 mb-4 text-white">
             <ShieldAlert className="w-8 h-8" />
@@ -39,7 +37,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           <p className="text-slate-400 text-sm mt-1">Smart Cybersecurity Intelligence Platform</p>
         </div>
 
-        {/* Demo Quick Role Switcher */}
+        {/* Quick Role Switcher */}
         <div className="mb-6 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs">
           <p className="text-slate-400 font-medium mb-2 flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-brand-400" /> Select Demo Access Role:
@@ -49,10 +47,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               <button
                 key={r}
                 type="button"
-                onClick={() => {
-                  setRole(r);
-                  setEmail(`${r.toLowerCase()}@scip.sec`);
-                }}
+                onClick={() => handleRoleSwitch(r)}
                 className={`py-1.5 px-2 rounded-lg font-medium transition-all ${
                   role === r
                     ? 'bg-brand-600 text-white shadow-sm'
@@ -65,7 +60,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           </div>
         </div>
 
-        {/* Form */}
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-xs text-red-400">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
@@ -97,10 +99,20 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
           <button
             type="submit"
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-medium shadow-lg shadow-brand-600/25 flex items-center justify-center gap-2 transition-all mt-6"
+            disabled={isLoading}
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 disabled:opacity-60 text-white font-medium shadow-lg shadow-brand-600/25 flex items-center justify-center gap-2 transition-all mt-6"
           >
-            <span>Authenticate & Access SCIP</span>
-            <ArrowRight className="w-4 h-4" />
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Authenticating...
+              </span>
+            ) : (
+              <>
+                <span>Authenticate & Access SCIP</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
