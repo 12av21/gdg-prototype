@@ -1,0 +1,122 @@
+================================================================================
+  SCIP - SMART CYBERSECURITY INTELLIGENCE PLATFORM (PROJECT GUIDE)
+================================================================================
+
+1. OVERVIEW OF THE PROJECT
+--------------------------------------------------------------------------------
+SCIP (Smart Cybersecurity Intelligence Platform) is an enterprise-grade,
+AI-powered incident management and cybersecurity knowledge platform.
+
+It combines modern SOC (Security Operations Center) workflows with Retrieval-
+Augmented Generation (RAG) powered by Gemini AI and pgvector to help security
+analysts detect, investigate, and remediate cybersecurity threats faster.
+
+Key Objectives:
+- Real-time incident tracking, severity categorization, and status lifecycle.
+- AI Security Copilot providing context-aware threat recommendations.
+- RAG Knowledge Base storing indexed security standards (NIST, MITRE ATT&CK).
+- Telemetry & Analytics tracking Mean Time To Remediate (MTTR) and threat metrics.
+- Role-Based Access Control (RBAC) for Admins, Analysts, and Employees.
+
+
+2. SYSTEM ARCHITECTURE & TECH STACK
+--------------------------------------------------------------------------------
+SCIP follows a Modular Monorepo Architecture:
+
+- FRONTEND (`apps/web`):
+  React 18 + TypeScript + Vite + Tailwind CSS + Lucide Icons.
+  Responsive dark-themed command center UI with instant local prototype support.
+
+- BACKEND API (`apps/api`):
+  ASP.NET Core (.NET 8) Web API implementing Clean Architecture, Entity
+  Framework Core, and JWT authentication.
+
+- AI & RAG SERVICE (`apps/ai-service`):
+  Gemini 1.5 Flash integration with vector embedding search for threat playbooks.
+
+- INFRASTRUCTURE (`docker-compose.yml`):
+  PostgreSQL container with `pgvector` extension (port 5432) + Redis (port 6379).
+
+
+3. HOW TO RUN THE PROJECT LOCALLY
+--------------------------------------------------------------------------------
+STEP A: RUN FRONTEND WEB APP (Already Live!)
+--------------------------------------------
+1. Open terminal in project root.
+2. Run:
+   npm run dev:web
+3. Open browser at: http://localhost:3000/
+
+
+STEP B: RUN INFRASTRUCTURE (Docker Database)
+--------------------------------------------
+1. Make sure Docker Desktop is open.
+2. Run in project root terminal:
+   docker-compose up -d
+   (This starts PostgreSQL with pgvector on port 5432 and Redis on 6379).
+
+
+STEP C: RUN BACKEND API (.NET 8)
+--------------------------------
+1. Install .NET 8 SDK using terminal command:
+   winget install Microsoft.DotNet.SDK.8
+   (Or download from https://dotnet.microsoft.com/download/dotnet/8.0)
+2. Open a new terminal and navigate to API folder:
+   cd apps/api
+3. Start the API:
+   dotnet run
+4. View API Documentation / Swagger at: https://localhost:7198/swagger
+
+
+4. WHAT TO DO / HOW TO TEST ALL FEATURES
+--------------------------------------------------------------------------------
+1. LOGGING IN & ROLE SELECTION:
+   - Go to http://localhost:3000/
+   - Click "Launch SCIP" to go to the Login Portal.
+   - Test 3 different user roles using the Quick Role Switcher:
+     * Admin: Access full platform configuration and telemetry.
+     * Analyst: Access incident triage, status updates, and investigation notes.
+     * Employee: Simple interface to report new incidents and search KB.
+   - Click "Authenticate & Access SCIP".
+
+2. DASHBOARD (CYBER THREAT INTELLIGENCE COMMAND):
+   - View live telemetry: Open Incidents (3), Resolved Today (12), MTTR metrics.
+   - Click on "Launch AI Security Copilot" or suggested security tasks.
+
+3. INCIDENT OPERATIONS HUB (`/incidents`):
+   - Click "Report New Incident" to submit a new security event (Title, Severity, Category).
+   - Filter incidents by severity (Critical, High, Medium, Low) or search by ID.
+   - Update incident status (New -> Investigating -> In Progress -> Resolved -> Closed).
+   - Post investigation notes or IOC hashes in the timeline.
+
+4. AI SECURITY COPILOT (`/copilot`):
+   - Ask security questions like "How to remediate a Ransomware attack?" or
+     "What are MITRE techniques for PowerShell execution?".
+   - View AI response with RAG citations and recommended action steps.
+
+5. RAG KNOWLEDGE BASE (`/knowledge`):
+   - Search security policies, NIST standards, and MITRE ATT&CK documentation.
+   - Upload new security documents to index into vector store.
+
+6. REPORTS & ANALYTICS (`/reports`):
+   - View incident distribution charts, MTTR graphs, and analyst performance.
+   - Export security summaries as PDF or CSV.
+
+
+5. PROJECT FILE STRUCTURE QUICK REFERENCE
+--------------------------------------------------------------------------------
+SCIP/
+├── PROJECT_GUIDE.txt         <- This file
+├── README.md                 <- Quick start & architecture overview
+├── BUILD_ORDER.md            <- Monorepo build milestone tracker
+├── AGENTS.md                 <- Agent roles & development standards
+├── docker-compose.yml        <- Postgres (pgvector) & Redis setup
+├── apps/
+│   ├── web/                  <- Frontend (React + TypeScript + Vite)
+│   ├── api/                  <- Backend (ASP.NET Core .NET 8 API)
+│   └── ai-service/           <- RAG & AI processing logic
+└── docs/                     <- Project documentation & SRS
+
+================================================================================
+                  SCIP - READY FOR LOCAL TESTING & DEMONSTRATION
+================================================================================
