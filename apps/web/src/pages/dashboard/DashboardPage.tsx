@@ -26,9 +26,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         setStats(statsData);
         setIncidents(incidentData.slice(0, 3));
       } catch {
-        // If API is offline fallback to mock values
-        setStats({ openIncidents: 3, resolvedToday: 12, totalDocuments: 148, aiQueriesTotal: 482, avgMttrMinutes: 24.5 });
-        setIncidents(MOCK_INCIDENTS);
+        // API error - show loading state, will retry on next render
+        // Do not fallback to mock values - let component show error state naturally
       } finally {
         setLoading(false);
       }
@@ -167,7 +166,4 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   );
 };
 
-const MOCK_INCIDENTS: Incident[] = [
-  { id: 'INC-001', title: 'Suspicious PowerShell Execution', description: 'Obfuscated script on WS-402', severity: 'Critical', category: 'Malware', status: 'Investigating', reportedBy: 'EDR', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), evidenceCount: 4 },
-  { id: 'INC-002', title: 'Phishing Campaign - Finance', description: 'Fake invoice macro payload', severity: 'High', category: 'Social Engineering', status: 'In Progress', reportedBy: 'Jane Doe', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), evidenceCount: 2 },
-];
+

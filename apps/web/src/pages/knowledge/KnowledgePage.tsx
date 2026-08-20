@@ -14,48 +14,7 @@ import {
 import { DocumentItem } from '../../types';
 
 export const KnowledgePage: React.FC = () => {
-  const [documents, setDocuments] = useState<DocumentItem[]>([
-    {
-      id: 'DOC-01',
-      title: 'NIST SP 800-61 Rev 2 Computer Security Incident Handling Guide',
-      category: 'Frameworks',
-      fileType: 'PDF',
-      fileSize: '2.4 MB',
-      uploadedBy: 'Security Ops',
-      uploadedAt: '2026-07-28',
-      tags: ['NIST', 'Incident Response', 'Playbook']
-    },
-    {
-      id: 'DOC-02',
-      title: 'MITRE ATT&CK Framework Enterprise Matrix v14',
-      category: 'Threat Intel',
-      fileType: 'PDF',
-      fileSize: '5.1 MB',
-      uploadedBy: 'Analyst Sarah',
-      uploadedAt: '2026-07-29',
-      tags: ['MITRE', 'Tactics', 'Techniques']
-    },
-    {
-      id: 'DOC-03',
-      title: 'Internal Incident Response Escalation Standard Operating Procedure',
-      category: 'SOP',
-      fileType: 'DOCX',
-      fileSize: '840 KB',
-      uploadedBy: 'Compliance Admin',
-      uploadedAt: '2026-07-30',
-      tags: ['SOP', 'Escalation', 'Internal']
-    },
-    {
-      id: 'DOC-04',
-      title: 'OWASP Top 10 API Security Risks 2026 Edition',
-      category: 'Advisories',
-      fileType: 'Markdown',
-      fileSize: '310 KB',
-      uploadedBy: 'AppSec Team',
-      uploadedAt: '2026-07-31',
-      tags: ['OWASP', 'API Security', 'Vulnerabilities']
-    }
-  ]);
+  const [documents, setDocuments] = useState<DocumentItem[]>([]);
 
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');

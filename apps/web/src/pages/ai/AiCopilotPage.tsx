@@ -54,7 +54,7 @@ export const AiCopilotPage: React.FC = () => {
       const errMsg: ChatMessage = {
         id: `m-err-${Date.now()}`,
         sender: 'ai',
-        text: '⚠️ Could not reach the SCIP API. Please ensure the backend is running on http://localhost:5000.',
+        text: '⚠️ Unable to connect to AI service. Please check backend status and try again.',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errMsg]);

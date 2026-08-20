@@ -30,8 +30,8 @@ export const IncidentPage: React.FC<IncidentPageProps> = ({ currentUser }) => {
         setIncidents(data);
         if (data.length > 0) setSelectedIncident(data[0]);
       } catch {
-        setIncidents(MOCK_INCIDENTS);
-        setSelectedIncident(MOCK_INCIDENTS[0]);
+        // API error - keep empty state, will retry on next interaction
+        // Do not fallback to mock incidents - show loading/error state naturally
       } finally {
         setLoading(false);
       }
@@ -250,7 +250,4 @@ export const IncidentPage: React.FC<IncidentPageProps> = ({ currentUser }) => {
   );
 };
 
-const MOCK_INCIDENTS: Incident[] = [
-  { id: 'INC-2026-001', title: 'Suspicious PowerShell Execution', description: 'Obfuscated PowerShell on Endpoint-WS-402', severity: 'Critical', category: 'Malware Execution', status: 'Investigating', reportedBy: 'EDR Agent', assignedAnalyst: 'Alex Mercer', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), evidenceCount: 4 },
-  { id: 'INC-2026-002', title: 'Phishing Campaign - Finance Dept', description: 'Macro payload in fake invoice email', severity: 'High', category: 'Social Engineering', status: 'In Progress', reportedBy: 'Jane Doe', assignedAnalyst: 'Sarah Connor', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), evidenceCount: 2 },
-];
+
