@@ -57,7 +57,7 @@ namespace SCIP.Api.Entities
     public class IncidentComment
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid IncidentId { get; set; };
+        public Guid IncidentId { get; set; }
         public string Author { get; set; } = string.Empty;
         public string CommentText { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
