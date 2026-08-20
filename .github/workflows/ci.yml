@@ -32,7 +32,8 @@ jobs:
       - name: Build production bundle
         run: npm run build
         env:
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          # Falls back to the value in apps/web/.env.production when the secret is unset
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://scip-api.onrender.com/api' }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -60,10 +61,13 @@ jobs:
       - name: Build API
         run: dotnet build apps/api/SCIP.Api.csproj -c Release --no-restore
 
+      - name: Verify Docker backend image builds
+        run: docker build -t scip-api:ci -f Dockerfile .
+
   # ─── Deploy Frontend to Vercel ───────────────────────────────
   deploy-frontend:
     name: Deploy to Vercel
-    needs: frontend
+    needs: [frontend, backend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 

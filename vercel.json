@@ -1,7 +1,8 @@
 {
   "version": 2,
   "name": "scip-web",
-  "buildCommand": "npm run build:web",
+  "buildCommand": "npm --prefix apps/web install && npm --prefix apps/web run build",
+  "installCommand": "npm --prefix apps/web install",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
   "routes": [
@@ -11,8 +12,8 @@
       "headers": { "X-Requested-With": "XMLHttpRequest" }
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "/((?!assets/|shield\\.svg).*)",
+      "dest": "/"
     }
   ],
   "env": {

@@ -88,11 +88,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // ─── 5. CORS ─────────────────────────────────────────────────────────────────
+var corsOrigins = builder.Configuration["Cors:AllowedOrigins"]
+    ?? "http://localhost:3000,http://localhost:5173,https://scip-web.vercel.app";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+        policy.WithOrigins(corsOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -101,21 +104,22 @@ builder.Services.AddCors(options =>
 // ─── 6. Build & Configure HTTP Pipeline ─────────────────────────────────────
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Swagger is available in all environments for the SCIP API Explorer (demo/MCA project)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SCIP API v1.0");
-        c.DocumentTitle = "SCIP – API Explorer";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SCIP API v1.0");
+    c.DocumentTitle = "SCIP – API Explorer";
+});
 
 app.UseCors("AllowReactApp");
 app.UseScipExceptionMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Production root redirect to Swagger UI for convenience; health endpoint always available
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 // Auto-seed initial database records
 using (var scope = app.Services.CreateScope())
